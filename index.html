@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahil Foods | Order Online</title>
+<meta name="description" content="Order delicious breakfast and dinner from Mahil Foods, Singanallur.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#fff8ef;color:#2b2118;line-height:1.5}
+header{background:linear-gradient(135deg,#8b1e12,#d64b20);color:#fff;text-align:center;padding:34px 16px}
+header h1{font-size:40px;margin-bottom:5px}
+header p{font-size:17px}
+.container{max-width:850px;margin:auto;padding:25px 15px 100px}
+h2{text-align:center;margin:12px 0 18px;font-size:28px}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:#fff;padding:20px;border-radius:16px;box-shadow:0 4px 15px #00000012}
+.card h3{font-size:23px;margin-bottom:10px}
+.item{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #eee}
+.item:last-child{border-bottom:0}
+.item-name{font-size:18px}
+.price{font-weight:bold}
+button{border:0;cursor:pointer}
+.add{background:#8b1e12;color:white;border-radius:20px;padding:7px 14px;font-weight:bold}
+.cart{margin-top:25px;background:#2b2118;color:white;padding:22px;border-radius:17px}
+.cart h2{color:white;margin-top:0}
+.cart-row{display:flex;justify-content:space-between;padding:7px 0}
+.total{border-top:1px solid #ffffff55;margin-top:10px;padding-top:12px;font-size:20px;font-weight:bold}
+.order-form{margin-top:18px;display:grid;gap:10px}
+input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;font-size:16px}
+.order-btn{background:#25d366;color:white;padding:14px;border-radius:28px;font-size:17px;font-weight:bold}
+.clear{background:#fff;color:#8b1e12;padding:9px 15px;border-radius:20px;margin-top:10px}
+.note{text-align:center;margin-top:18px;color:#6f5b48}
+footer{text-align:center;padding:20px;color:#735f4c}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍽️ Mahil Foods</h1>
+  <p>Fresh • Tasty • Homely</p>
+  <p>📍 Singanallur, Coimbatore</p>
+</header>
+
+<div class="container">
+  <h2>Order Online</h2>
+
+  <div class="menu">
+    <div class="card">
+      <h3>🌅 Breakfast</h3>
+      <div class="item"><span class="item-name">Idly</span><span>₹10</span><button class="add" onclick="addItem('Idly',10)">Add</button></div>
+      <div class="item"><span class="item-name">Dosa</span><span>₹40</span><button class="add" onclick="addItem('Dosa',40)">Add</button></div>
+      <div class="item"><span class="item-name">Pongal</span><span>₹40</span><button class="add" onclick="addItem('Pongal',40)">Add</button></div>
+    </div>
+
+    <div class="card">
+      <h3>🌙 Dinner</h3>
+      <div class="item"><span class="item-name">Dosa</span><span>₹40</span><button class="add" onclick="addItem('Dosa',40)">Add</button></div>
+      <div class="item"><span class="item-name">Parotta</span><span>₹20</span><button class="add" onclick="addItem('Parotta',20)">Add</button></div>
+      <div class="item"><span class="item-name">Egg</span><span>₹15</span><button class="add" onclick="addItem('Egg',15)">Add</button></div>
+    </div>
+  </div>
+
+  <div class="cart">
+    <h2>🛒 Your Order</h2>
+    <div id="cartItems">No items added yet.</div>
+    <div class="total">Total: ₹<span id="total">0</span></div>
+
+    <div class="order-form">
+      <input id="customerName" type="text" placeholder="Your name">
+      <input id="customerPhone" type="tel" placeholder="Your phone number">
+      <select id="orderType">
+        <option value="Pickup">Pickup</option>
+        <option value="Delivery">Delivery</option>
+      </select>
+      <input id="address" type="text" placeholder="Delivery address (if required)">
+      <button class="order-btn" onclick="placeOrder()">💬 Place Order on WhatsApp</button>
+      <button class="clear" onclick="clearCart()">Clear Order</button>
+    </div>
+  </div>
+
+  <p class="note">📞 7702094095 &nbsp; | &nbsp; Orders are confirmed through WhatsApp.</p>
+</div>
+
+<footer>© 2026 Mahil Foods • Singanallur</footer>
+
+<script>
+let cart=[];
+
+function addItem(name,price){
+  const found=cart.find(x=>x.name===name);
+  if(found){found.qty++}else{cart.push({name,price,qty:1})}
+  renderCart();
+}
+function renderCart(){
+  const box=document.getElementById('cartItems');
+  if(!cart.length){box.innerHTML='No items added yet.';document.getElementById('total').textContent='0';return}
+  let total=0;
+  box.innerHTML=cart.map((x,i)=>{
+    const subtotal=x.price*x.qty; total+=subtotal;
+    return `<div class="cart-row"><span>${x.name} × ${x.qty}</span><span>₹${subtotal}</span></div>`;
+  }).join('');
+  document.getElementById('total').textContent=total;
+}
+function clearCart(){cart=[];renderCart();}
+function placeOrder(){
+  if(!cart.length){alert('Please add at least one item.');return}
+  const name=document.getElementById('customerName').value.trim();
+  const phone=document.getElementById('customerPhone').value.trim();
+  const type=document.getElementById('orderType').value;
+  const address=document.getElementById('address').value.trim();
+  if(!name||!phone){alert('Please enter your name and phone number.');return}
+  if(type==='Delivery'&&!address){alert('Please enter the delivery address.');return}
+  let total=0;
+  let lines=cart.map(x=>{const sub=x.price*x.qty;total+=sub;return `• ${x.name} x ${x.qty} = ₹${sub}`});
+  let msg=`Hello Mahil Foods!%0A%0A*New Order*%0AName: ${encodeURIComponent(name)}%0APhone: ${encodeURIComponent(phone)}%0AOrder type: ${type}%0A`;
+  if(type==='Delivery') msg+=`Address: ${encodeURIComponent(address)}%0A`;
+  msg+=`%0A${lines.join('%0A')}%0A%0A*Total: ₹${total}*`;
+  window.open(`https://wa.me/917702094095?text=${msg}`,'_blank');
+}
+</script>
+</body>
+</html>
